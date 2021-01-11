@@ -1,0 +1,23 @@
+### Packer ###
+# Cache objects
+packer_cache/
+packer-builder-arm
+
+# Crash log
+crash.log
+
+# Built boxes
+*.box
+
+# Archives
+*.img
+*.tar.gz
+*.xz
+
+### Visual Studio Code ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
