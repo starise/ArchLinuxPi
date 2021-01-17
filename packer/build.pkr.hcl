@@ -27,4 +27,8 @@ build {
     provisioner "shell" {
         inline = ["ln -sf /usr/share/zoneinfo/${var.timezone} /etc/localtime"]
     }
+    # Set keyboard layout
+    provisioner "shell" {
+        inline = ["echo 'KEYMAP=${var.keymap}' > /etc/vconsole.conf"]
+    }
 }

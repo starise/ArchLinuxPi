@@ -6,3 +6,9 @@ variable "timezone" {
     description = "Server timezone"
     default = "Etc/UTC"
 }
+
+variable "keymap" {
+    type = string
+    description = "Persistent keyboard layout"
+    default = "us"
+}
