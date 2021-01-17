@@ -12,3 +12,9 @@ variable "keymap" {
     description = "Persistent keyboard layout"
     default = "us"
 }
+
+variable "locale" {
+    type = string
+    description = "Current locale"
+    default = "en_US.UTF-8"
+}

@@ -31,4 +31,12 @@ build {
     provisioner "shell" {
         inline = ["echo 'KEYMAP=${var.keymap}' > /etc/vconsole.conf"]
     }
+    # Set server locale
+    provisioner "shell" {
+        inline = [
+            "echo 'LANG=${var.locale}' > /etc/locale.conf",
+            "sed -i -e '/^[^#]/s/^/#/' -e '/${var.locale}/s/^#//' /etc/locale.gen",
+            "locale-gen ${var.locale}"
+        ]
+    }
 }
