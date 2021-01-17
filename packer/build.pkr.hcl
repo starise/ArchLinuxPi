@@ -23,4 +23,8 @@ build {
     provisioner "shell" {
         script = "scripts/bootstrap_resizerootfs.sh"
     }
+    # Set server timezone
+    provisioner "shell" {
+        inline = ["ln -sf /usr/share/zoneinfo/${var.timezone} /etc/localtime"]
+    }
 }
