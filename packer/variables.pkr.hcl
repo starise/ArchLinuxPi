@@ -18,3 +18,13 @@ variable "locale" {
     description = "Current locale"
     default = "en_US.UTF-8"
 }
+
+variable "net_address" {
+    type = string
+    description = "Static IP address and its prefix length"
+}
+
+variable "net_gateway" {
+    type = string
+    description = "Gateway address"
+}

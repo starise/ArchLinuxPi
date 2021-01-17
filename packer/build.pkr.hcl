@@ -39,4 +39,14 @@ build {
             "locale-gen ${var.locale}"
         ]
     }
+    # Set static wired network
+    provisioner "shell" {
+        inline = [
+            "echo '[Match]' > /etc/systemd/network/eth0.network",
+            "echo 'Name=eth0\n' >> /etc/systemd/network/eth0.network",
+            "echo '[Network]' >> /etc/systemd/network/eth0.network",
+            "echo 'Address=${var.net_address}' >> /etc/systemd/network/eth0.network",
+            "echo 'Gateway=${var.net_gateway}' >> /etc/systemd/network/eth0.network"
+        ]
+    }
 }
