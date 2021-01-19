@@ -28,3 +28,9 @@ variable "net_gateway" {
     type = string
     description = "Gateway address"
 }
+
+variable "hostname" {
+    type = string
+    description = "Server hostname"
+    default = "alarmpi"
+}

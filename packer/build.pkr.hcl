@@ -49,4 +49,18 @@ build {
             "echo 'Gateway=${var.net_gateway}' >> /etc/systemd/network/eth0.network"
         ]
     }
+    # Set up static table lookup for hostnames
+    provisioner "shell" {
+        inline = [
+            "echo '${var.hostname}' > /etc/hostname",
+            "echo '127.0.0.1 localhost' >> /etc/hosts",
+            "echo '127.0.1.1 ${var.hostname}' >> /etc/hosts",
+            "echo '::1       ip6-localhost ip6-loopback' >> /etc/hosts",
+            "echo 'fe00::0   ip6-localnet' >> /etc/hosts",
+            "echo 'ff00::0   ip6-mcastprefix' >> /etc/hosts",
+            "echo 'ff02::1   ip6-allnodes' >> /etc/hosts",
+            "echo 'ff02::2   ip6-allrouters' >> /etc/hosts",
+            "echo 'ff02::3   ip6-allhosts' >> /etc/hosts"
+        ]
+    }
 }
