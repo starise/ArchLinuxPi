@@ -63,4 +63,22 @@ build {
             "echo 'ff02::3   ip6-allhosts' >> /etc/hosts"
         ]
     }
+    # Set up ssh access and disable password authentication
+    provisioner "shell" {
+        inline = [
+            "mkdir /home/${var.username}/.ssh/",
+            "touch /home/${var.username}/.ssh/authorized_keys",
+            "chmod 700 /home/${var.username}/.ssh/",
+            "chmod 600 /home/${var.username}/.ssh/authorized_keys",
+            "chown ${var.username}:${var.username} /home/${var.username}/.ssh/ /home/${var.username}/.ssh/*",
+            "sed '/PasswordAuthentication/d' -i /etc/ssh/sshd_config",
+            "echo  >> /etc/ssh/sshd_config",
+            "echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config"
+        ]
+    }
+    # Copy ssh authorized key to server user's home folder
+    provisioner "file" {
+        destination = "/home/${var.username}/.ssh/authorized_keys"
+        source = "${var.auth_sshkey}"
+    }
 }

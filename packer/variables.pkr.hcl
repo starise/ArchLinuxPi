@@ -34,3 +34,15 @@ variable "hostname" {
     description = "Server hostname"
     default = "alarmpi"
 }
+
+variable "username" {
+    type = string
+    description = "Server username"
+    default = "alarm"
+}
+
+variable "auth_sshkey" {
+    type = string
+    description = "File containing SSH authorized key"
+    default = "~/.ssh/id_rsa.pub"
+}
