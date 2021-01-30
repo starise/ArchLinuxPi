@@ -14,6 +14,10 @@ build {
             "pacman -S parted --noconfirm --needed"
         ]
     }
+    # Enable container features in the kernel
+    provisioner "shell" {
+        inline = ["echo -n \" cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory\" >> /boot/cmdline.txt"]
+    }
     # Upload scripts/resizerootfs to /tmp
     provisioner "file" {
         destination = "/tmp"
