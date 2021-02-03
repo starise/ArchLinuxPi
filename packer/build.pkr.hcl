@@ -85,4 +85,11 @@ build {
         destination = "/home/${var.username}/.ssh/authorized_keys"
         source = "${var.auth_sshkey}"
     }
+    # Restore resolv.conf managed by systemd-resolved
+    provisioner "shell" {
+        inline = [
+        "rm -v /etc/resolv.conf",
+        "mv -v /etc/resolv.conf.bk /etc/resolv.conf",
+        ]
+    }
 }
