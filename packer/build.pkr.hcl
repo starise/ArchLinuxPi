@@ -11,7 +11,9 @@ build {
             "echo 'nameserver 1.1.1.1' > /etc/resolv.conf",
             "echo 'nameserver 8.8.8.8' >> /etc/resolv.conf",
             "pacman -Sy --noconfirm --needed",
-            "pacman -S parted --noconfirm --needed"
+            "pacman -S parted --noconfirm --needed",
+            "pacman -S python --noconfirm --needed",
+            "pacman -S sudo --noconfirm --needed"
         ]
     }
     # Enable container features in the kernel
