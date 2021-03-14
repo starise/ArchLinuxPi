@@ -87,6 +87,13 @@ build {
         destination = "/home/${var.username}/.ssh/authorized_keys"
         source = "${var.auth_sshkey}"
     }
+    # Apply Raspberry Pi OS kernel tweaks
+    provisioner "shell" {
+        inline = [
+            "echo 'kernel.printk = 3 4 1 3' > /etc/sysctl.d/98-rpi.conf",
+            "echo 'vm.min_free_kbytes = 16384' >> /etc/sysctl.d/98-rpi.conf"
+        ]
+    }
     # Use nano as default text editor
     provisioner "shell" {
         inline = ["echo 'export VISUAL=\"nano\"\nexport EDITOR=\"nano\"' > /etc/profile.d/nano.sh"]
