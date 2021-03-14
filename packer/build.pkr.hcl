@@ -87,6 +87,10 @@ build {
         destination = "/home/${var.username}/.ssh/authorized_keys"
         source = "${var.auth_sshkey}"
     }
+    # Use nano as default text editor
+    provisioner "shell" {
+        inline = ["export VISUAL=\"nano\"\nexport EDITOR=\"nano\"' > /etc/profile.d/nano.sh"]
+    }
     # Set up sudo permissions and settings
     provisioner "shell" {
         inline = [
