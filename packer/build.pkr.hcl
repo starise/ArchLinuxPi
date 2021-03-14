@@ -87,6 +87,13 @@ build {
         destination = "/home/${var.username}/.ssh/authorized_keys"
         source = "${var.auth_sshkey}"
     }
+    # Set up sudo permissions and settings
+    provisioner "shell" {
+        inline = [
+            "echo 'Defaults env_keep += \"EDITOR\"' > /etc/sudoers.d/01-env-editor",
+            "chmod 440 /etc/sudoers.d/01-env-editor"
+        ]
+    }
     # Restore resolv.conf managed by systemd-resolved
     provisioner "shell" {
         inline = [
