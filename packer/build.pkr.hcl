@@ -89,7 +89,7 @@ build {
     }
     # Use nano as default text editor
     provisioner "shell" {
-        inline = ["export VISUAL=\"nano\"\nexport EDITOR=\"nano\"' > /etc/profile.d/nano.sh"]
+        inline = ["echo 'export VISUAL=\"nano\"\nexport EDITOR=\"nano\"' > /etc/profile.d/nano.sh"]
     }
     # Set up sudo permissions and settings
     provisioner "shell" {
