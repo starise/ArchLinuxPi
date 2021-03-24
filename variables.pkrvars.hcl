@@ -1,0 +1,8 @@
+timezone    = "Europe/Rome"
+locale      = "it_IT.UTF-8"
+keymap      = "it"
+net_address = "192.168.0.1/24"
+net_gateway = "192.168.0.254"
+hostname    = "alpi"
+username    = "alarm"
+auth_sshkey = "/build/.ssh/id_rsa.pub"
