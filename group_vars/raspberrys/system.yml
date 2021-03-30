@@ -35,3 +35,9 @@ hostname_aliases: []
 keymap: it
 locale: it_IT.UTF-8
 language: it_IT.UTF-8
+
+#
+# Timezone
+# https://github.com/alysoid/ansible-role-timezone
+#
+timezone: Europe/Rome

@@ -17,3 +17,4 @@
     - { role: boot-config, tags: [boot-config] }
     - { role: hostname, tags: [hostname] }
     - { role: locale, tags: [locale] }
+    - { role: timezone, tags: [timezone] }

@@ -10,3 +10,5 @@ roles:
     src: https://github.com/alysoid/ansible-role-hostname
   - name: locale
     src: https://github.com/alysoid/ansible-role-locale
+  - name: timezone
+    src: https://github.com/alysoid/ansible-role-timezone
