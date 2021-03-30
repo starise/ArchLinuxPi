@@ -12,6 +12,36 @@ systemd_network:
     - Network:
       - Address: '192.168.0.1/24'
       - Gateway: '192.168.0.254'
+  wlan0:
+    - Match:
+      - Name: 'wlan0'
+    - Network:
+      - DHCP: 'yes'
+    - DHCP:
+      - RouteMetric: '20'
 
 systemd_netdev: {}
 systemd_link: {}
+
+#
+# Wireless Network (iwd)
+# https://github.com/alysoid/ansible-role-wireless
+#
+iwd_conf_cleanup: no
+iwd_network_cleanup: no
+
+iwd_conf:
+  main:
+    - General:
+      - EnableNetworkConfiguration: 'false'
+    - Network:
+      - NameResolvingService: 'systemd'
+    - Scan:
+      - DisablePeriodicScan: 'true'
+
+# Wireless network configuration files (.open, .psk or .8021x)
+iwd_network:
+  =4e33742d7330757263655e32.psk:
+    - Security:
+      - Passphrase: ''
+      - PreSharedKey: ''

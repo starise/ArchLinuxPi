@@ -14,3 +14,5 @@ roles:
     src: https://github.com/alysoid/ansible-role-timezone
   - name: network
     src: https://github.com/alysoid/ansible-role-network
+  - name: wireless
+    src: https://github.com/alysoid/ansible-role-wireless
