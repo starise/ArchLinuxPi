@@ -27,7 +27,7 @@ Pre-set packer sources available are:
 
 Open and edit the `variables.pkrvars.hcl` file to customize all the desired values:
 
-```conf
+```sh
 timezone    = "Etc/UTC"           # Default timezone for the system
 locale      = "en_US.UTF-8"       # Default locale for the system
 keymap      = "us"                # Default keyboard layout to use
@@ -75,3 +75,19 @@ Another simple multiplatform tool is [Balena Etcher](https://www.balena.io/etche
 ![Balena Etcher](https://i.stack.imgur.com/b3VOr.gif)
 
 Now put the SD Card into your Raspberry Pi 4 and **Power On**.
+
+## Access from the local network
+
+When your machine is up and ready, it should be accessible via SSH using the above assigned static IP address (`net_address` variable), or using `hostname.local` where `hostname` is the custom assigned hostname.
+
+```sh
+$ ssh -i <path/to/id_rsa> alarm@192.168.0.1
+```
+
+## Ansible: configure and manage the Raspberry Pi
+
+First of all, install the required collections and roles on your working machine:
+
+```sh
+$ ansible-galaxy install -r requirements.yml
+```
