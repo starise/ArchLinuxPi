@@ -18,3 +18,4 @@
     - { role: hostname, tags: [hostname] }
     - { role: locale, tags: [locale] }
     - { role: timezone, tags: [timezone] }
+    - { role: network, tags: [network] }

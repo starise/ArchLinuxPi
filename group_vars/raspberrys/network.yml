@@ -1,0 +1,17 @@
+#
+# Wired Network
+# https://github.com/alysoid/ansible-role-network
+#
+network_cleanup: no
+resolve_cleanup: no
+
+systemd_network:
+  eth0:
+    - Match:
+      - Name: 'eth0'
+    - Network:
+      - Address: '192.168.0.1/24'
+      - Gateway: '192.168.0.254'
+
+systemd_netdev: {}
+systemd_link: {}
