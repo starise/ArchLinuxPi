@@ -12,3 +12,6 @@
       ansible.builtin.package:
         name: "{{ system_packages | default([]) }}"
         state: present
+
+  roles:
+    - { role: boot-config, tags: [boot-config] }
