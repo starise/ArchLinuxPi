@@ -43,5 +43,5 @@ iwd_conf:
 iwd_network:
   =4e33742d7330757263655e32.psk:
     - Security:
-      - Passphrase: ''
-      - PreSharedKey: ''
+      - Passphrase: "{{ vault_wifi_Passphrase }}"
+      - PreSharedKey: "{{ vault_wifi_PreSharedKey }}"
