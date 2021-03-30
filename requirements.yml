@@ -6,6 +6,7 @@ roles:
   - name: boot-config
     src: https://github.com/infothrill/ansible-role-rpi_boot_config
     version: '4.1.0'
-
   - name: hostname
     src: https://github.com/alysoid/ansible-role-hostname
+  - name: locale
+    src: https://github.com/alysoid/ansible-role-locale
