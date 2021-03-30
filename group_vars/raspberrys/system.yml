@@ -20,3 +20,10 @@ system_packages:
   - unzip
   - wget
   - htop
+
+#
+# Hostname
+# https://github.com/alysoid/ansible-role-hostname
+#
+hostname: alpi
+hostname_aliases: []
