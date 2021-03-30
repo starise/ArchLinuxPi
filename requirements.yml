@@ -1,3 +1,7 @@
-- name: boot-config
-  src: https://github.com/infothrill/ansible-role-rpi_boot_config
-  version: '4.1.0'
+collections:
+  - name: community.general
+
+roles:
+  - name: boot-config
+    src: https://github.com/infothrill/ansible-role-rpi_boot_config
+    version: '4.1.0'
