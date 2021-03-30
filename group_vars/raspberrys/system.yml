@@ -1,0 +1,14 @@
+#
+# System playbook
+#
+username: alarm
+
+#
+# Custom packages
+#
+system_packages:
+  - git
+  - zip
+  - unzip
+  - wget
+  - htop

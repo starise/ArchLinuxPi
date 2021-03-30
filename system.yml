@@ -1,0 +1,14 @@
+---
+- name: "Self-Hosted: Update system and install custom packages"
+  hosts: raspberrys
+  become: yes
+  remote_user: "{{ username }}"
+  tasks:
+    - name: Update system with 'pacman -Syu'
+      community.general.pacman:
+        update_cache: yes
+        upgrade: yes
+    - name: Install custom packages
+      ansible.builtin.package:
+        name: "{{ system_packages | default([]) }}"
+        state: present
