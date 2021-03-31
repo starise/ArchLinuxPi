@@ -42,3 +42,16 @@ language: it_IT.UTF-8
 # https://github.com/alysoid/ansible-role-timezone
 #
 timezone: Europe/Rome
+
+#
+# Systemd Swap (ZRam drives)
+# https://github.com/alysoid/ansible-role-swap
+#
+systemd_swap_conf_d:
+  zram_swap:
+    - zram_enabled: 1
+    - zram_size: $(( RAM_SIZE / 4 ))
+    - zram_count: ${NCPU}
+    - zram_streams: ${NCPU}
+    - zram_alg: lz4
+    - zram_prio: 32767

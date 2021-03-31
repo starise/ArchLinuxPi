@@ -22,3 +22,4 @@
     - { role: wireless, tags: [wireless] }
     - { role: resolve, tags: [resolve] }
     - { role: timesync, tags: [timesync] }
+    - { role: swap, tags: [swap] }
