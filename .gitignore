@@ -1,4 +1,5 @@
 ### Ansible ###
+vendor/roles/
 *.retry
 .vault_pass
 
