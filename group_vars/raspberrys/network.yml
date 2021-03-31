@@ -64,3 +64,20 @@ systemd_resolved:
   dnssec:
     - Resolve:
       - DNSSEC: "allow-downgrade"
+
+#
+# Timesync (SNTP client)
+# https://github.com/alysoid/ansible-role-timesync
+#
+timesync_cleanup: no
+
+systemd_timesyncd_conf_d:
+  main_ntp:
+    - Time:
+      - NTP: '0.it.pool.ntp.org 1.it.pool.ntp.org 2.it.pool.ntp.org 3.it.pool.ntp.org'
+      - RootDistanceMaxSec: '5'
+      - PollIntervalMinSec: '32'
+      - PollIntervalMaxSec: '2048'
+  fallback_ntp:
+    - Time:
+      - FallbackNTP: '0.arch.pool.ntp.org 1.arch.pool.ntp.org 2.arch.pool.ntp.org 3.arch.pool.ntp.org'
