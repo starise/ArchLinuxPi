@@ -47,9 +47,11 @@ iwd_network:
       - PreSharedKey: "{{ vault_wifi_PreSharedKey }}"
 
 #
-# Resolve
+# Resolve (DNS resolver)
 # https://github.com/alysoid/ansible-role-resolve
 #
+resolve_cleanup: no
+
 systemd_resolved:
   dns_server:
     # Cloudflare DNS
