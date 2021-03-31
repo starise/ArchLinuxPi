@@ -16,3 +16,5 @@ roles:
     src: https://github.com/alysoid/ansible-role-network
   - name: wireless
     src: https://github.com/alysoid/ansible-role-wireless
+  - name: resolve
+    src: https://github.com/alysoid/ansible-role-resolve

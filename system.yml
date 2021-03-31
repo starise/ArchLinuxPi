@@ -20,3 +20,4 @@
     - { role: timezone, tags: [timezone] }
     - { role: network, tags: [network] }
     - { role: wireless, tags: [wireless] }
+    - { role: resolve, tags: [resolve] }
