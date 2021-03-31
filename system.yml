@@ -13,6 +13,10 @@
         name: "{{ system_packages | default([]) }}"
         state: present
 
+- name: "Self-Hosted: Deploy and configure system software and services"
+  hosts: raspberrys
+  become: yes
+  remote_user: "{{ username }}"
   roles:
     - { role: boot-config, tags: [boot-config] }
     - { role: hostname, tags: [hostname] }
