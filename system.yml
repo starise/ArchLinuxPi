@@ -23,3 +23,4 @@
     - { role: resolve, tags: [resolve] }
     - { role: timesync, tags: [timesync] }
     - { role: swap, tags: [swap] }
+    - { role: log2ram, tags: [log2ram] }

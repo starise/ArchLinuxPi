@@ -22,3 +22,5 @@ roles:
     src: https://github.com/alysoid/ansible-role-timesync
   - name: swap
     src: https://github.com/alysoid/ansible-role-swap
+  - name: log2ram
+    src: https://github.com/alysoid/ansible-role-log2ram
