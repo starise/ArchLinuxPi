@@ -21,6 +21,7 @@ system_packages:
   - wget
   - htop
   - iwd
+  - systemd-swap
 
 #
 # Hostname
