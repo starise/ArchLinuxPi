@@ -3,7 +3,6 @@
 # https://github.com/alysoid/ansible-role-network
 #
 network_cleanup: no
-resolve_cleanup: no
 
 systemd_network:
   eth0:
