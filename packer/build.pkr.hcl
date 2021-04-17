@@ -105,7 +105,9 @@ build {
     provisioner "shell" {
         inline = [
             "echo 'Defaults env_keep += \"EDITOR\"' > /etc/sudoers.d/01-env-editor",
-            "chmod 440 /etc/sudoers.d/01-env-editor"
+            "chmod 440 /etc/sudoers.d/01-env-editor",
+            "echo '${var.username} ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/10-${var.username}-nopasswd",
+            "chmod 440 /etc/sudoers.d/10-${var.username}-nopasswd"
         ]
     }
     # Restore resolv.conf managed by systemd-resolved
