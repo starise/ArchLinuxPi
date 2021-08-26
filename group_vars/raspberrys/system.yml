@@ -22,6 +22,7 @@ system_packages:
   - htop
   - iwd
   - systemd-swap
+  - firewalld
 
 #
 # Hostname
