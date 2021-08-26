@@ -23,6 +23,8 @@ system_packages:
   - iwd
   - systemd-swap
   - firewalld
+  - docker
+  - docker-compose
 
 #
 # Hostname
