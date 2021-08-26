@@ -8,10 +8,16 @@
       community.general.pacman:
         update_cache: yes
         upgrade: yes
-    - name: Install custom packages
+    - name: Install system packages
       ansible.builtin.package:
         name: "{{ system_packages | default([]) }}"
         state: present
+    - name: Configure system services
+      ansible.builtin.systemd:
+        name: "{{ item.name }}"
+        state: "{{ item.state }}"
+        enabled: "{{ item.enabled }}"
+      loop: "{{ system_services | default([]) }}"
 
 - name: "Self-Hosted: Deploy and configure system software and services"
   hosts: raspberrys

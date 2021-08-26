@@ -27,6 +27,17 @@ system_packages:
   - docker-compose
 
 #
+# System services
+#
+system_services:
+  - name: firewalld.service
+    state: started
+    enabled: yes
+  - name: docker.service
+    state: started
+    enabled: yes
+
+#
 # Hostname
 # https://github.com/alysoid/ansible-role-hostname
 #
