@@ -1,0 +1,26 @@
+---
+- name: "Self-Hosted: Configure system firewall and security"
+  hosts: raspberrys
+  become: yes
+  remote_user: "{{ username }}"
+  tasks:
+    - name: "firewalld: Assign eth0 interface to public zone"
+      ansible.posix.firewalld:
+        zone: public
+        interface: eth0
+        permanent: yes
+        state: enabled
+    - name: "firewalld: Enable http traffic in docker zone"
+      ansible.posix.firewalld:
+        zone: docker
+        service: http
+        permanent: yes
+        state: enabled
+    - name: "firewalld: Enable https traffic in docker zone"
+      ansible.posix.firewalld:
+        zone: docker
+        service: https
+        permanent: yes
+        state: enabled
+    - name: "firewalld: Reload firewall rules"
+      command: firewall-cmd --reload
