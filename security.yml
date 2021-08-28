@@ -10,6 +10,11 @@
         interface: eth0
         permanent: yes
         state: enabled
+    - name: "firewalld: Enable Link-Local Multicast Name Resolution in public zone"
+      ansible.posix.firewalld:
+        service: llmnr
+        permanent: yes
+        state: enabled
     - name: "firewalld: Enable http traffic in docker zone"
       ansible.posix.firewalld:
         zone: docker
