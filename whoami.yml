@@ -1,0 +1,72 @@
+---
+- name: "Self-Hosted: SSL Certificate with Traefik + Let's Encrypt + Cloudflare"
+  hosts: raspberrys
+  become: yes
+  remote_user: "{{ username }}"
+  tasks:
+    - name: "Docker Compose: Build Traefik with whoami webserver"
+      community.docker.docker_compose:
+        project_name: self-hosted
+        definition:
+          services:
+            #
+            # Traefik: HTTP reverse proxy and load balancer 
+            # https://github.com/traefik/traefik
+            #
+            traefik:
+              image: traefik:v2.5
+              container_name: traefik
+              environment:
+                CF_API_EMAIL: "{{ vault_cloudflare_api_email }}"
+                CF_DNS_API_TOKEN: "{{ vault_cloudflare_token }}"
+                CF_ZONE_API_TOKEN: "{{ vault_cloudflare_token }}"
+              volumes:
+                - /var/run/docker.sock:/var/run/docker.sock
+                - /var/lib/traefik/letsencrypt:/letsencrypt
+              ports:
+                - '80:80'
+                - '443:443'
+                - '8080:8080'
+              command:
+                - --api.insecure=true # Dev mode
+                # Enable Docker as provider
+                - --providers.docker=true
+                - --providers.docker.exposedByDefault=false
+                # Open http and https connections for incoming requests
+                - --entrypoints.web.address=:80
+                - --entrypoints.websecure.address=:443
+                # Let's Encrypt certificate resolver via CloudFlare DNS challenge
+                - --certificatesresolvers.letsencrypt.acme.dnschallenge=true
+                - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare
+                - --certificatesResolvers.letsencrypt.acme.caServer=https://acme-v02.api.letsencrypt.org/directory
+                - --certificatesresolvers.letsencrypt.acme.email={{ vault_letsencrypt_email }}
+                - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+            #
+            # whoami: Tiny Go webserver that prints os information and HTTP request to output
+            # https://github.com/traefik/whoami
+            #
+            whoami:
+              image: traefik/whoami:latest
+              container_name: whoami
+              labels:
+                - traefik.enable=true
+                # Middleware to redirect http requests to https
+                - traefik.http.services.whoami.loadbalancer.server.port=80
+                - traefik.http.middlewares.whoami-redirect-to-https.redirectscheme.scheme=https
+                # Define 'whoami-web' http router
+                - traefik.http.routers.whoami-web.entrypoints=web
+                - traefik.http.routers.whoami-web.rule=Host(`whoami.{{ server_domain }}`)
+                # Let 'whoami-web' router use the redirect middleware to https
+                - traefik.http.routers.whoami-web.middlewares=whoami-redirect-to-https
+                # Define 'whoami-websecure' http router
+                - traefik.http.routers.whoami-websecure.entrypoints=websecure
+                - traefik.http.routers.whoami-websecure.rule=Host(`whoami.{{ server_domain }}`)                    
+                # Let 'whoami-websecure' router use TLS and certificate resolver named 'letsencrypt'
+                - traefik.http.routers.whoami-websecure.tls=true
+                - traefik.http.routers.whoami-websecure.tls.certresolver=letsencrypt
+                # Generate a wildcard certificate instead of one for each subdomain
+                - traefik.http.routers.whoami-websecure.tls.domains[0].main=*.{{ server_domain }}
+        build: yes
+        state: present
+        stopped: no
+        restarted: yes
