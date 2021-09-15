@@ -24,3 +24,5 @@ roles:
     src: https://github.com/alysoid/ansible-role-swap
   - name: log2ram
     src: https://github.com/alysoid/ansible-role-log2ram
+  - name: mount
+    src: https://github.com/alysoid/ansible-role-mount

@@ -80,3 +80,18 @@ log2ram_send_mail: no
 log2ram_path_disk: ['/var/log']
 log2ram_zram_enabled: yes
 log2ram_compression_algorithm: lz4
+
+#
+# Systemd Mount
+# https://github.com/alysoid/ansible-role-mount
+#
+systemd_mount:
+  - name: Storage
+    options:
+      Mount:
+        What: /dev/sda
+        Where: /mnt/storage
+        Type: btrfs
+        Options: defaults
+      Install:
+        WantedBy: multi-user.target
