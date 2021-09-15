@@ -25,6 +25,7 @@ system_packages:
   - firewalld
   - docker
   - docker-compose
+  - btrfs-progs
 
 #
 # System services
