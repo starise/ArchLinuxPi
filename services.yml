@@ -1,0 +1,108 @@
+---
+- name: "Self-Hosted: Configure Docker services"
+  hosts: raspberrys
+  become: yes
+  remote_user: "{{ username }}"
+  tasks:
+    - name: "Docker Compose: Self-Hosted Services"
+      community.docker.docker_compose:
+        project_name: self-hosted
+        definition:
+          services:
+            #
+            # Traefik: HTTP reverse proxy and load balancer
+            # https://github.com/traefik/traefik
+            #
+            traefik:
+              image: traefik:v2.5
+              container_name: traefik
+              restart: unless-stopped
+              environment:
+                CF_API_EMAIL: "{{ vault_cloudflare_api_email }}"
+                CF_DNS_API_TOKEN: "{{ vault_cloudflare_token }}"
+                CF_ZONE_API_TOKEN: "{{ vault_cloudflare_token }}"
+              volumes:
+                - /var/run/docker.sock:/var/run/docker.sock
+                - /var/lib/traefik/letsencrypt:/letsencrypt
+                - /var/log/traefik:/var/log/traefik
+              ports:
+                - '80:80'
+                - '443:443'
+              command:
+                - --api=true
+                # Traefik Pilot instance: https://pilot.traefik.io/
+                - --pilot.token={{ vault_traefik_pilot_token }}
+                # Enable logs
+                - --accesslog=true
+                - --accesslog.filepath=/var/log/traefik/access.log
+                - --accesslog.fields.headers.names.Content-Type=keep
+                - --accesslog.fields.headers.names.Referer=keep
+                - --accesslog.fields.headers.names.User-Agent=keep
+                # Enable Docker as provider
+                - --providers.docker=true
+                - --providers.docker.exposedByDefault=false
+                # Open http and https connections for Incoming Requests
+                - --entrypoints.web.address=:80
+                - --entrypoints.websecure.address=:443
+                - --entrypoints.websecure.http.tls.certresolver=letsencrypt
+                - --entrypoints.websecure.http.tls.domains[0].main=*.{{ server_domain }}
+                # Let's Encrypt certificate resolver via CloudFlare DNS challenge
+                - --certificatesresolvers.letsencrypt.acme.dnschallenge=true
+                - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare
+                - --certificatesResolvers.letsencrypt.acme.caServer=https://acme-v02.api.letsencrypt.org/directory
+                - --certificatesresolvers.letsencrypt.acme.email={{ vault_letsencrypt_email }}
+                - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+                - --certificatesresolvers.letsencrypt.acme.dnschallenge.resolvers==1.1.1.1:53,1.0.0.1:53
+              labels:
+                - traefik.enable=true
+                # Middleware to redirect http requests to https
+                - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+                # Define 'http-catchall' router to redirect http requests to https
+                - traefik.http.routers.http-catchall.entrypoints=web
+                - traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)
+                - traefik.http.routers.http-catchall.middlewares=redirect-to-https@docker
+                # Middleware to provide OAuth authentication
+                - traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://auth:4181
+                - traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User
+                # Dashboard configuration
+                - traefik.http.routers.traefik-router.tls=true
+                - traefik.http.routers.traefik-router.entrypoints=websecure
+                - traefik.http.routers.traefik-router.service=api@internal
+                - traefik.http.routers.traefik-router.rule=Host(`traefik.{{ server_domain }}`)
+                - traefik.http.routers.traefik-router.middlewares=traefik-forward-auth@docker
+                - traefik.http.services.traefik-service.loadbalancer.server.port=8080
+              networks:
+                - traefik-net
+                - auth-net
+            #
+            # Traefik Forward Auth
+            # https://github.com/thomseddon/traefik-forward-auth
+            #
+            traefik-forward-auth:
+              image: thomseddon/traefik-forward-auth:2.2-arm
+              container_name: auth
+              restart: unless-stopped
+              environment:
+                AUTH_HOST: "auth.{{ server_domain }}"
+                COOKIE_DOMAIN: "{{ server_domain }}"
+                PROVIDERS_GOOGLE_CLIENT_ID: "{{ vault_auth_google_client_id }}"
+                PROVIDERS_GOOGLE_CLIENT_SECRET: "{{ vault_auth_google_client_secret }}"
+                SECRET: "{{ vault_auth_secret }}"
+                WHITELIST: "{{ vault_auth_whitelist }}"
+              labels:
+                - traefik.enable=true
+                - traefik.docker.network=auth-net
+                - traefik.http.routers.auth-router.tls=true
+                - traefik.http.routers.auth-router.entrypoints=websecure
+                - traefik.http.routers.auth-router.rule=Host(`auth.{{ server_domain }}`)
+                - traefik.http.routers.auth-router.middlewares=traefik-forward-auth
+                - traefik.http.services.traefik-forward-auth-service.loadbalancer.server.port=4181
+              networks:
+                - auth-net
+          networks:
+            auth-net: {}
+            traefik-net: {}
+        build: yes
+        state: present
+        stopped: no
+        restarted: yes
