@@ -26,3 +26,5 @@ roles:
     src: https://github.com/alysoid/ansible-role-log2ram
   - name: mount
     src: https://github.com/alysoid/ansible-role-mount
+  - name: samba
+    src: https://github.com/alysoid/ansible-role-samba

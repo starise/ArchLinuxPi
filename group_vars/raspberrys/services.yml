@@ -1,6 +1,23 @@
 #
 # Docker Services
 #
+server_domain: andreabrandi.com
+server_subnet: 192.168.0.0/16,10.0.0.0/8,172.16.0.0/12
 
-server_domain: 'andreabrandi.com'
-server_subnet: '192.168.0.0/16,10.0.0.0/8,172.16.0.0/12'
+#
+# Samba file server
+#
+samba_username: "{{ username }}"
+samba_password: "{{ vault_samba_password }}"
+
+samba_username_map:
+  - from: Andrea
+    to: "{{ username }}"
+
+samba_shares:
+  - name: Storage
+    path: /mnt/storage
+    valid_users: "{{ samba_username }}"
+    write_list: "{{ samba_username }}"
+    browseable: 'yes'
+    writable: 'yes'
