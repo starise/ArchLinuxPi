@@ -99,6 +99,22 @@
                 - traefik.http.services.traefik-forward-auth-service.loadbalancer.server.port=4181
               networks:
                 - auth-net
+            #
+            # Cloudflare Companion - Autoupdate Cloudflare DNS records
+            # https://github.com/tiredofit/docker-traefik-cloudflare-companion
+            #
+            cloudflare-companion:
+              image: tiredofit/traefik-cloudflare-companion:latest
+              container_name: cloudflare-companion
+              restart: unless-stopped
+              environment:
+                TRAEFIK_VERSION: 2
+                CF_TOKEN: "{{ vault_cloudflare_token }}"
+                TARGET_DOMAIN: "core.{{ server_domain }}"
+                DOMAIN1: "{{ server_domain }}"
+                DOMAIN1_ZONE_ID: "{{ vault_cloudflare_domain_zone_id }}"
+              volumes:
+                - /var/run/docker.sock:/var/run/docker.sock
           networks:
             auth-net: {}
             traefik-net: {}
