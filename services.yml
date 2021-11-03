@@ -127,6 +127,7 @@
               environment:
                 SIGNUPS_DOMAINS_WHITELIST: "{{ server_domain }}"
                 SIGNUPS_VERIFY: "true"
+                WEBSOCKET_ENABLED: "true"
               volumes:
                 - /mnt/storage/Services/bitwarden/data/:/data
               labels:
@@ -136,8 +137,14 @@
                 - traefik.http.routers.bitwarden-router.tls=true
                 - traefik.http.routers.bitwarden-router.entrypoints=websecure
                 - traefik.http.routers.bitwarden-router.rule=Host(`bitwarden.{{ server_domain }}`)
-                - traefik.http.routers.bitwarden-router.middlewares=traefik-forward-auth@docker
-                - traefik.http.services.bitwarden-service.loadbalancer.server.port=80
+                - traefik.http.routers.bitwarden-router.service=bitwarden-ui
+                - traefik.http.services.bitwarden-ui.loadbalancer.server.port=80
+                # Bitwarden websocket configuration
+                - traefik.http.routers.bitwarden-ws-router.tls=true
+                - traefik.http.routers.bitwarden-ws-router.entrypoints=websecure
+                - traefik.http.routers.bitwarden-ws-router.rule=Host(`bitwarden.{{ server_domain }}`) && Path(`/notifications/hub`)
+                - traefik.http.routers.bitwarden-ws-router.service=bitwarden-ws
+                - traefik.http.services.bitwarden-ws.loadbalancer.server.port=3012
               networks:
                 - bitwarden-net
           networks:
