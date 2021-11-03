@@ -99,29 +99,9 @@
                 - traefik.http.services.traefik-forward-auth-service.loadbalancer.server.port=4181
               networks:
                 - auth-net
-            #
-            # Samba file server
-            # https://github.com/mschirrmeister/docker-samba-server
-            #
-            samba:
-              image: mschirrmeister/samba-server:latest
-              container_name: samba
-              restart: always
-              environment:
-                USERNAME: "{{ username }}"
-                PASSWORD: "{{ samba_password }}"
-              volumes:
-                - /etc/samba:/etc/samba
-                - /mnt/storage:/mnt/storage
-              ports:
-                - 139:139/tcp
-                - 445:445/tcp
-              networks:
-                - samba-net
           networks:
             auth-net: {}
             traefik-net: {}
-            samba-net: {}
         build: yes
         state: present
         stopped: no
