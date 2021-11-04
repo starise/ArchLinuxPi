@@ -32,5 +32,6 @@
     - { role: wireless, tags: [wireless] }
     - { role: resolve, tags: [resolve] }
     - { role: timesync, tags: [timesync] }
+    - { role: journald, tags: [journald] }
     - { role: swap, tags: [swap] }
     - { role: log2ram, tags: [log2ram] }

@@ -60,6 +60,17 @@ language: it_IT.UTF-8
 timezone: Europe/Rome
 
 #
+# Systemd journald
+# https://github.com/alysoid/ansible-systemd-journald
+#
+systemd_journald:
+  journald:
+    - Journal:
+      - Storage: persistent
+      - SystemMaxUse: 100M
+      - SystemKeepFree: 50M
+
+#
 # Systemd Swap (ZRam drives)
 # https://github.com/alysoid/ansible-role-swap
 #

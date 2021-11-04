@@ -20,6 +20,8 @@ roles:
     src: https://github.com/alysoid/ansible-role-resolve
   - name: timesync
     src: https://github.com/alysoid/ansible-role-timesync
+  - name: journald
+    src: https://github.com/alysoid/ansible-systemd-journald
   - name: swap
     src: https://github.com/alysoid/ansible-role-swap
   - name: log2ram
