@@ -6,14 +6,14 @@
   roles:
     - { role: samba, tags: [samba] }
 
-- name: "Self-Hosted: Samba Docker container"
+- name: "Self-Hosted: Samba container"
   hosts: raspberrys
   become: yes
   remote_user: "{{ username }}"
   tasks:
-    - name: "Docker Compose: Create Samba container"
+    - name: "Docker Compose: Samba container"
       community.docker.docker_compose:
-        project_name: self-hosted
+        project_name: samba-shares
         definition:
           services:
             #
