@@ -74,7 +74,7 @@
               networks:
                 - traefik-net
                 - auth-net
-                - bitwarden-net
+                - vaultwarden-net
             #
             # Traefik Forward Auth
             # https://github.com/thomseddon/traefik-forward-auth
@@ -120,9 +120,9 @@
             # Vaultwarden - Bitwarden server written in Rust
             # https://github.com/dani-garcia/vaultwarden
             #
-            bitwarden:
+            vaultwarden:
               image: vaultwarden/server:latest
-              container_name: bitwarden
+              container_name: vaultwarden
               restart: unless-stopped
               environment:
                 DOMAIN: "https://bitwarden.{{ server_domain }}"
@@ -131,28 +131,28 @@
                 SHOW_PASSWORD_HINT: "false"
                 WEBSOCKET_ENABLED: "true"
               volumes:
-                - /mnt/storage/Services/bitwarden/data/:/data
+                - /mnt/storage/Services/vaultwarden/data/:/data
               labels:
                 - traefik.enable=true
-                - traefik.docker.network=bitwarden-net
-                # Bitwarden UI configuration
-                - traefik.http.routers.bitwarden-router.tls=true
-                - traefik.http.routers.bitwarden-router.entrypoints=websecure
-                - traefik.http.routers.bitwarden-router.rule=Host(`bitwarden.{{ server_domain }}`)
-                - traefik.http.routers.bitwarden-router.service=bitwarden-ui
-                - traefik.http.services.bitwarden-ui.loadbalancer.server.port=80
-                # Bitwarden websocket configuration
-                - traefik.http.routers.bitwarden-ws-router.tls=true
-                - traefik.http.routers.bitwarden-ws-router.entrypoints=websecure
-                - traefik.http.routers.bitwarden-ws-router.rule=Host(`bitwarden.{{ server_domain }}`) && Path(`/notifications/hub`)
-                - traefik.http.routers.bitwarden-ws-router.service=bitwarden-ws
-                - traefik.http.services.bitwarden-ws.loadbalancer.server.port=3012
+                - traefik.docker.network=vaultwarden-net
+                # Vaultwarden UI configuration
+                - traefik.http.routers.vaultwarden-router.tls=true
+                - traefik.http.routers.vaultwarden-router.entrypoints=websecure
+                - traefik.http.routers.vaultwarden-router.rule=Host(`bitwarden.{{ server_domain }}`)
+                - traefik.http.routers.vaultwarden-router.service=vaultwarden-ui
+                - traefik.http.services.vaultwarden-ui.loadbalancer.server.port=80
+                # Vaultwarden websocket configuration
+                - traefik.http.routers.vaultwarden-ws-router.tls=true
+                - traefik.http.routers.vaultwarden-ws-router.entrypoints=websecure
+                - traefik.http.routers.vaultwarden-ws-router.rule=Host(`bitwarden.{{ server_domain }}`) && Path(`/notifications/hub`)
+                - traefik.http.routers.vaultwarden-ws-router.service=vaultwarden-ws
+                - traefik.http.services.vaultwarden-ws.loadbalancer.server.port=3012
               networks:
-                - bitwarden-net
+                - vaultwarden-net
           networks:
             auth-net: {}
             traefik-net: {}
-            bitwarden-net: {}
+            vaultwarden-net: {}
         build: yes
         state: present
         stopped: no
