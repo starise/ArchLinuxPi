@@ -21,6 +21,8 @@
                 CF_API_EMAIL: "{{ vault_cloudflare_api_email }}"
                 CF_DNS_API_TOKEN: "{{ vault_cloudflare_token }}"
                 CF_ZONE_API_TOKEN: "{{ vault_cloudflare_token }}"
+                # Traefik Pilot instance: https://pilot.traefik.io/
+                TRAEFIK_PILOT_TOKEN: "{{ vault_traefik_pilot_token }}"
               volumes:
                 - /var/run/docker.sock:/var/run/docker.sock
                 - /var/lib/traefik/letsencrypt:/letsencrypt
@@ -30,8 +32,6 @@
                 - '443:443'
               command:
                 - --api=true
-                # Traefik Pilot instance: https://pilot.traefik.io/
-                - --pilot.token={{ vault_traefik_pilot_token }}
                 # Enable logs
                 - --accesslog=true
                 - --accesslog.filepath=/var/log/traefik/access.log
