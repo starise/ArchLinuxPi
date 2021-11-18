@@ -106,7 +106,7 @@
             #
             cloudflare-companion:
               image: tiredofit/traefik-cloudflare-companion:latest
-              container_name: cloudflare-companion
+              container_name: cloudflare
               restart: unless-stopped
               environment:
                 TRAEFIK_VERSION: 2
