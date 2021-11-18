@@ -67,8 +67,9 @@ systemd_journald:
   journald:
     - Journal:
       - Storage: persistent
-      - SystemMaxUse: 100M
-      - SystemKeepFree: 50M
+      - SystemMaxUse: '100M'
+      - SystemMaxFilesize: '100M'
+      - SystemKeepFree: '50M'
 
 #
 # Systemd Swap (ZRam drives)
@@ -87,7 +88,7 @@ systemd_swap_conf_d:
 # Log2ram
 # https://github.com/alysoid/ansible-role-log2ram
 #
-log2ram_size: '100M'
+log2ram_size: '120M'
 log2ram_send_mail: no
 log2ram_path_disk: ['/var/log']
 log2ram_zram_enabled: yes
