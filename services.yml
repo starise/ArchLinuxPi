@@ -33,6 +33,7 @@
               command:
                 - --api=true
                 # Enable logs
+                - --log.level=info
                 - --accesslog=true
                 - --accesslog.filepath=/var/log/traefik/access.log
                 - --accesslog.fields.headers.names.Content-Type=keep
