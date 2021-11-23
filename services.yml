@@ -75,6 +75,7 @@
                 - traefik-net
                 - auth-net
                 - vaultwarden-net
+                - homeassistant-net
             #
             # Traefik Forward Auth
             # https://github.com/thomseddon/traefik-forward-auth
@@ -149,10 +150,33 @@
                 - traefik.http.services.vaultwarden-ws.loadbalancer.server.port=3012
               networks:
                 - vaultwarden-net
+            #
+            # Home Assistant: Open source home automation
+            # https://github.com/home-assistant/docker
+            #
+            homeassistant:
+              image: homeassistant/home-assistant:latest
+              container_name: homeassistant
+              restart: unless-stopped
+              environment:
+                TZ: "{{ timezone }}"
+              volumes:
+                - /mnt/storage/Services/homeassistant/config:/config
+              labels:
+                - traefik.enable=true
+                - traefik.docker.network=homeassistant-net
+                - traefik.http.routers.hass-router.tls=true
+                - traefik.http.routers.hass-router.entrypoints=websecure
+                - traefik.http.routers.hass-router.rule=Host(`hass.{{ server_domain }}`)
+                - traefik.http.routers.hass-router.service=home-assistant
+                - traefik.http.services.home-assistant.loadbalancer.server.port=8123
+              networks:
+                - homeassistant-net
           networks:
             auth-net: {}
             traefik-net: {}
             vaultwarden-net: {}
+            homeassistant-net: {}
         build: yes
         state: present
         stopped: no
