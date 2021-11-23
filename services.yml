@@ -70,7 +70,7 @@
                 - traefik.http.routers.traefik-router.service=api@internal
                 - traefik.http.routers.traefik-router.rule=Host(`traefik.{{ server_domain }}`)
                 - traefik.http.routers.traefik-router.middlewares=traefik-forward-auth@docker
-                - traefik.http.services.traefik-service.loadbalancer.server.port=8080
+                - traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080
               networks:
                 - traefik-net
                 - auth-net
@@ -98,7 +98,8 @@
                 - traefik.http.routers.auth-router.entrypoints=websecure
                 - traefik.http.routers.auth-router.rule=Host(`auth.{{ server_domain }}`)
                 - traefik.http.routers.auth-router.middlewares=traefik-forward-auth
-                - traefik.http.services.traefik-forward-auth-service.loadbalancer.server.port=4181
+                - traefik.http.routers.auth-router.service=forward-auth
+                - traefik.http.services.forward-auth.loadbalancer.server.port=4181
               networks:
                 - auth-net
             #
@@ -137,10 +138,10 @@
                 - traefik.enable=true
                 - traefik.docker.network=vaultwarden-net
                 # Vaultwarden UI configuration
-                - traefik.http.routers.vaultwarden-router.tls=true
-                - traefik.http.routers.vaultwarden-router.entrypoints=websecure
-                - traefik.http.routers.vaultwarden-router.rule=Host(`pass.{{ server_domain }}`)
-                - traefik.http.routers.vaultwarden-router.service=vaultwarden-ui
+                - traefik.http.routers.vaultwarden-ui-router.tls=true
+                - traefik.http.routers.vaultwarden-ui-router.entrypoints=websecure
+                - traefik.http.routers.vaultwarden-ui-router.rule=Host(`pass.{{ server_domain }}`)
+                - traefik.http.routers.vaultwarden-ui-router.service=vaultwarden-ui
                 - traefik.http.services.vaultwarden-ui.loadbalancer.server.port=80
                 # Vaultwarden websocket configuration
                 - traefik.http.routers.vaultwarden-ws-router.tls=true
