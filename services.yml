@@ -77,6 +77,7 @@
                 - auth-net
                 - vaultwarden-net
                 - homeassistant-net
+                - vuetorrent-net
             #
             # Traefik Forward Auth
             # https://github.com/thomseddon/traefik-forward-auth
@@ -174,11 +175,38 @@
                 - traefik.http.services.home-assistant.loadbalancer.server.port=8123
               networks:
                 - homeassistant-net
+            #
+            # qbittorrent + VueTorrent: Torrent client
+            # https://hotio.dev/containers/qbittorrent/
+            #
+            vuetorrent:
+              image: hotio/qbittorrent:release-0cb2b3c-326-linux-arm-v7
+              container_name: vuetorrent
+              restart: unless-stopped
+              environment:
+                TZ: "{{ timezone }}"
+                PUID: 1000
+                PGID: 1000
+                UMASK: 002
+              volumes:
+                - /mnt/storage/Services/vuetorrent:/config
+                - /mnt/storage/Scaricati:/config/downloads
+              labels:
+                - traefik.enable=true
+                - traefik.docker.network=vuetorrent-net
+                - traefik.http.routers.vuetor-router.tls=true
+                - traefik.http.routers.vuetor-router.entrypoints=websecure
+                - traefik.http.routers.vuetor-router.rule=Host(`torrent.{{ server_domain }}`)
+                - traefik.http.routers.vuetor-router.service=vuetorrent
+                - traefik.http.services.vuetorrent.loadbalancer.server.port=8080
+              networks:
+                - vuetorrent-net
           networks:
             auth-net: {}
             traefik-net: {}
             vaultwarden-net: {}
             homeassistant-net: {}
+            vuetorrent-net: {}
         build: yes
         state: present
         stopped: no
