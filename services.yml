@@ -65,6 +65,8 @@
                 # Middleware to provide OAuth authentication
                 - traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://auth:4181
                 - traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User
+                # Middleware to allow access only for LAN subnet IPs
+                - traefik.http.middlewares.lanfilter.ipwhitelist.sourcerange=127.0.0.1/32,{{ server_subnet }}
                 # Dashboard configuration
                 - traefik.http.routers.traefik-router.tls=true
                 - traefik.http.routers.traefik-router.entrypoints=websecure
