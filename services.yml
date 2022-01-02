@@ -111,7 +111,7 @@
             # https://github.com/tiredofit/docker-traefik-cloudflare-companion
             #
             cloudflare-companion:
-              image: tiredofit/traefik-cloudflare-companion:latest
+              image: tiredofit/traefik-cloudflare-companion:6.7.0
               container_name: cloudflare
               restart: unless-stopped
               environment:
