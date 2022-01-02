@@ -77,6 +77,7 @@
               networks:
                 - traefik-net
                 - auth-net
+                - adguard-net
                 - vaultwarden-net
                 - homeassistant-net
                 - vuetorrent-net
@@ -122,6 +123,31 @@
                 DOMAIN1_ZONE_ID: "{{ vault_cloudflare_domain_zone_id }}"
               volumes:
                 - /var/run/docker.sock:/var/run/docker.sock
+            #
+            # AdGuard Home: Ad blocking and privacy protection software
+            # https://github.com/AdguardTeam/AdGuardHome
+            #
+            adguard:
+              image: adguard/adguardhome:latest
+              container_name: adguard
+              restart: unless-stopped
+              volumes:
+                - /mnt/storage/Services/adguard/data:/opt/adguardhome/work
+                - /mnt/storage/Services/adguard/conf:/opt/adguardhome/conf
+              ports:
+                - '53:53/tcp'
+                - '53:53/udp'
+              labels:
+                - traefik.enable=true
+                - traefik.docker.network=adguard-net
+                - traefik.http.routers.adguard-router.tls=true
+                - traefik.http.routers.adguard-router.entrypoints=websecure
+                - traefik.http.routers.adguard-router.rule=Host(`adguard.{{ server_domain }}`)
+                - traefik.http.routers.adguard-router.service=adguard-home
+                # NB: Replace port 80 with 3000 for the first time run.
+                - traefik.http.services.adguard-home.loadbalancer.server.port=80
+              networks:
+                - adguard-net
             #
             # Vaultwarden - Bitwarden server written in Rust
             # https://github.com/dani-garcia/vaultwarden
@@ -206,6 +232,7 @@
           networks:
             auth-net: {}
             traefik-net: {}
+            adguard-net: {}
             vaultwarden-net: {}
             homeassistant-net: {}
             vuetorrent-net: {}
