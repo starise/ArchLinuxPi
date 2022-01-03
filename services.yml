@@ -262,8 +262,7 @@
                 - traefik.http.routers.vuetor-router.rule=Host(`torrent.{{ server_domain }}`)
                 - traefik.http.routers.vuetor-router.service=vuetorrent
                 - traefik.http.services.vuetorrent.loadbalancer.server.port=8080
-              networks:
-                - vuetorrent-net
+              network_mode: service:gluetun
           networks:
             auth-net: {}
             traefik-net: {}
