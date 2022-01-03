@@ -2,7 +2,7 @@
 # Docker Services
 #
 server_domain: andreabrandi.com
-server_subnet: 192.168.0.0/16,10.0.0.0/8,172.16.0.0/12
+server_subnet: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
 
 #
 # Samba file server
@@ -21,3 +21,13 @@ samba_shares:
     write_list: "{{ samba_username }}"
     browseable: 'yes'
     writable: 'yes'
+
+#
+# Gluetun VPN Service
+#
+gluetun_vpn_service: protonvpn
+gluetun_vpn_country: Netherlands
+gluetun_openvpn_user: "{{ vault_gluetun_openvpn_user }}"
+gluetun_openvpn_pass: "{{ vault_gluetun_openvpn_pass }}"
+gluetun_wireguard_key: "{{ vault_gluetun_wireguard_key }}"
+gluetun_wireguard_address: "{{ vault_gluetun_wireguard_address }}"

@@ -78,6 +78,7 @@
                 - traefik-net
                 - auth-net
                 - adguard-net
+                - gluetun-net
                 - vaultwarden-net
                 - homeassistant-net
                 - vuetorrent-net
@@ -148,6 +149,40 @@
                 - traefik.http.services.adguard-home.loadbalancer.server.port=80
               networks:
                 - adguard-net
+            #
+            # Gluetun: Lightweight Swiss-knife VPN client
+            # https://github.com/qdm12/gluetun
+            #
+            gluetun:
+              image: qmcgaw/gluetun:latest
+              container_name: gluetun
+              restart: unless-stopped
+              cap_add:
+                - NET_ADMIN
+              environment:
+                TZ: "{{ timezone }}"
+                VPNSP: "{{ gluetun_vpn_service }}"
+                COUNTRY: "{{ gluetun_vpn_country }}"
+                # OpenVPN:
+                OPENVPN_USER: "{{ gluetun_openvpn_user }}"
+                OPENVPN_PASSWORD: "{{ gluetun_openvpn_pass }}"
+                # Wireguard:
+                # WIREGUARD_PRIVATE_KEY: "{{ vault_wireguard_key }}"
+                # WIREGUARD_ADDRESS: "{{ vault_wireguard_address }}"
+                HTTPPROXY: 'on'
+              volumes:
+                - /mnt/storage/Services/gluetun:/gluetun
+              ports:
+                - 8888:8888/tcp # HTTP proxy
+                - 8388:8388/tcp # Shadowsocks
+                - 8388:8388/udp # Shadowsocks
+              labels:
+                - traefik.enable=true
+                - traefik.docker.network=gluetun-net
+                - traefik.http.routers.gluetun-router.service=gluetun
+                - traefik.http.services.gluetun.loadbalancer.server.port=8000
+              networks:
+                - gluetun-net
             #
             # Vaultwarden - Bitwarden server written in Rust
             # https://github.com/dani-garcia/vaultwarden
@@ -233,6 +268,7 @@
             auth-net: {}
             traefik-net: {}
             adguard-net: {}
+            gluetun-net: {}
             vaultwarden-net: {}
             homeassistant-net: {}
             vuetorrent-net: {}
