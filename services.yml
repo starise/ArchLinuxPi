@@ -79,6 +79,7 @@
                 - auth-net
                 - adguard-net
                 - gluetun-net
+                - gerbera-net
                 - vaultwarden-net
                 - homeassistant-net
                 - vuetorrent-net
@@ -184,6 +185,27 @@
               networks:
                 - gluetun-net
             #
+            # Gerbera - UPnP Media Server
+            # https://github.com/AdguardTeam/AdGuardHome
+            #
+            gerbera:
+              image: gerbera/gerbera:latest
+              container_name: gerbera
+              restart: unless-stopped
+              volumes:
+                - /mnt/storage/Services/gerbera:/var/run/gerbera
+                - /mnt/storage/Musica:/content/Musica:ro
+              labels:
+                - traefik.enable=true
+                - traefik.docker.network=gerbera-net
+                - traefik.http.routers.gerbera-router.tls=true
+                - traefik.http.routers.gerbera-router.entrypoints=websecure
+                - traefik.http.routers.gerbera-router.rule=Host(`gerbera.{{ server_domain }}`)
+                - traefik.http.routers.gerbera-router.service=gerbera
+                - traefik.http.services.gerbera.loadbalancer.server.port=49494
+              networks:
+                - gerbera-net
+            #
             # Vaultwarden - Bitwarden server written in Rust
             # https://github.com/dani-garcia/vaultwarden
             #
@@ -268,6 +290,7 @@
             traefik-net: {}
             adguard-net: {}
             gluetun-net: {}
+            gerbera-net: {}
             vaultwarden-net: {}
             homeassistant-net: {}
             vuetorrent-net: {}
