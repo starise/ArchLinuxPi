@@ -24,6 +24,7 @@
                 # Traefik Pilot instance: https://pilot.traefik.io/
                 TRAEFIK_PILOT_TOKEN: "{{ vault_traefik_pilot_token }}"
               volumes:
+                - /etc/traefik/rules.toml:/etc/traefik/rules.toml
                 - /var/run/docker.sock:/var/run/docker.sock
                 - /var/lib/traefik/letsencrypt:/letsencrypt
                 - /var/log/traefik:/var/log/traefik
@@ -39,7 +40,11 @@
                 - --accesslog.fields.headers.names.Content-Type=keep
                 - --accesslog.fields.headers.names.Referer=keep
                 - --accesslog.fields.headers.names.User-Agent=keep
-                # Enable Docker as provider
+                # Enable Traefik file provider
+                - --providers.file=true
+                - --providers.file.filename=/etc/traefik/rules.toml
+                - --providers.file.watch=true
+                # Enable Docker provider
                 - --providers.docker=true
                 - --providers.docker.exposedByDefault=false
                 # Open http and https connections for Incoming Requests
@@ -186,7 +191,7 @@
                 - gluetun-net
             #
             # Gerbera - UPnP Media Server
-            # https://github.com/AdguardTeam/AdGuardHome
+            # https://github.com/gerbera/gerbera
             #
             gerbera:
               image: gerbera/gerbera:latest
@@ -195,16 +200,7 @@
               volumes:
                 - /mnt/storage/Services/gerbera:/var/run/gerbera
                 - /mnt/storage/Musica:/content/Musica:ro
-              labels:
-                - traefik.enable=true
-                - traefik.docker.network=gerbera-net
-                - traefik.http.routers.gerbera-router.tls=true
-                - traefik.http.routers.gerbera-router.entrypoints=websecure
-                - traefik.http.routers.gerbera-router.rule=Host(`gerbera.{{ server_domain }}`)
-                - traefik.http.routers.gerbera-router.service=gerbera
-                - traefik.http.services.gerbera.loadbalancer.server.port=49494
-              networks:
-                - gerbera-net
+              network_mode: host
             #
             # Vaultwarden - Bitwarden server written in Rust
             # https://github.com/dani-garcia/vaultwarden
