@@ -32,3 +32,7 @@ Restart Docker and services and the IP assigned to the container should be now c
 ### Conflicts with systemd-resolved
 
 When `systemd-resolved` daemon is running, Docker will fail to bind on port 53. Because the daemon is listening on 127.0.0.53:53, we have to disable DNSStubListener [following the official instructions](https://hub.docker.com/r/adguard/adguardhome#resolved-daemon) of the image.
+
+## Gerbera - UPnP Media Server
+
+UPnP relies on having clients and servers able to communicate via IP Multicast. The default docker bridge network setup does not support multicast. [The easiest way](https://hub.docker.com/r/gerbera/gerbera) to achieve this is to use `network_mode: host` for the service. Anyway, using this strategy, it's not possible to redirect the port `49494` inside Docker via Traefik. In order to achieve this, [it's necessary](https://stackoverflow.com/a/60047840) to use a static configuration file (`/etc/traefik/rules.toml`) and enable the file provider to read this file.
