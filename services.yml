@@ -84,7 +84,6 @@
                 - auth-net
                 - adguard-net
                 - gluetun-net
-                - gerbera-net
                 - vaultwarden-net
                 - homeassistant-net
                 - vuetorrent-net
@@ -286,7 +285,6 @@
             traefik-net: {}
             adguard-net: {}
             gluetun-net: {}
-            gerbera-net: {}
             vaultwarden-net: {}
             homeassistant-net: {}
             vuetorrent-net: {}
