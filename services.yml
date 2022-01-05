@@ -88,6 +88,7 @@
                 - vaultwarden-net
                 - homeassistant-net
                 - vuetorrent-net
+                - jackett-net
             #
             # Traefik Forward Auth
             # https://github.com/thomseddon/traefik-forward-auth
@@ -203,7 +204,7 @@
                 PGID: 1000
               volumes:
                 - /mnt/storage/Services/duplicati/config:/config
-                - /mnt/storage/Services/duplicati/backups:/backups
+                - /mnt/storage/Backup/Duplicati:/backups
                 - /mnt/storage/Services:/source/Services
               labels:
                 - traefik.enable=true
@@ -308,6 +309,31 @@
                 - traefik.http.routers.vuetor-router.service=vuetorrent
                 - traefik.http.services.vuetorrent.loadbalancer.server.port=8080
               network_mode: service:gluetun
+            #
+            # Jackett: API Support for your torrent trackers
+            # https://hotio.dev/containers/jackett/
+            #
+            jackett:
+              image: hotio/jackett:release-57f6579-1076-linux-arm-v7
+              container_name: jackett
+              restart: unless-stopped
+              environment:
+                TZ: "{{ timezone }}"
+                PUID: 1000
+                PGID: 1000
+                UMASK: 002
+              volumes:
+                - /mnt/storage/Services/jackett:/config
+              labels:
+                - traefik.enable=true
+                - traefik.docker.network=jackett-net
+                - traefik.http.routers.jackett-router.tls=true
+                - traefik.http.routers.jackett-router.entrypoints=websecure
+                - traefik.http.routers.jackett-router.rule=Host(`jackett.{{ server_domain }}`)
+                - traefik.http.routers.jackett-router.middlewares=traefik-forward-auth@docker
+                - traefik.http.routers.jackett-router.service=jackett
+                - traefik.http.services.jackett.loadbalancer.server.port=9117
+              network_mode: service:gluetun
           networks:
             auth-net: {}
             traefik-net: {}
@@ -317,6 +343,7 @@
             vaultwarden-net: {}
             homeassistant-net: {}
             vuetorrent-net: {}
+            jackett-net: {}
         build: yes
         state: present
         stopped: no
