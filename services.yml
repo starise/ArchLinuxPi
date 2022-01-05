@@ -310,7 +310,7 @@
                 - traefik.http.services.vuetorrent.loadbalancer.server.port=8080
               network_mode: service:gluetun
             #
-            # Jackett: API Support for your torrent trackers
+            # Jackett: API Support for torrent trackers
             # https://hotio.dev/containers/jackett/
             #
             jackett:
@@ -335,7 +335,7 @@
                 - traefik.http.services.jackett.loadbalancer.server.port=9117
               network_mode: service:gluetun
             #
-            # Sonarr: PVR for newsgroup and torrent users
+            # Sonarr: TV PVR for Usenet and BitTorrent users
             # https://hotio.dev/containers/sonarr/
             #
             sonarr:
@@ -360,7 +360,7 @@
                 - traefik.http.services.sonarr.loadbalancer.server.port=8989
               network_mode: service:gluetun
             #
-            # Radarr: Movie collection manager for usenet and torrent users
+            # Radarr: Movie collection manager for Usenet and BitTorrent users
             # https://hotio.dev/containers/radarr/
             #
             radarr:
@@ -383,6 +383,31 @@
                 - traefik.http.routers.radarr-router.middlewares=traefik-forward-auth@docker
                 - traefik.http.routers.radarr-router.service=radarr
                 - traefik.http.services.radarr.loadbalancer.server.port=7878
+              network_mode: service:gluetun
+            #
+            # Lidarr: Music collection manager for Usenet and BitTorrent users
+            # https://hotio.dev/containers/lidarr/
+            #
+            lidarr:
+              image: hotio/lidarr:release-2a6612e-669-linux-arm-v7
+              container_name: lidarr
+              restart: unless-stopped
+              environment:
+                TZ: "{{ timezone }}"
+                PUID: 1000
+                PGID: 1000
+                UMASK: 002
+              volumes:
+                - /mnt/storage/Services/lidarr:/config
+              labels:
+                - traefik.enable=true
+                - traefik.docker.network=jackett-net
+                - traefik.http.routers.lidarr-router.tls=true
+                - traefik.http.routers.lidarr-router.entrypoints=websecure
+                - traefik.http.routers.lidarr-router.rule=Host(`lidarr.{{ server_domain }}`)
+                - traefik.http.routers.lidarr-router.middlewares=traefik-forward-auth@docker
+                - traefik.http.routers.lidarr-router.service=lidarr
+                - traefik.http.services.lidarr.loadbalancer.server.port=8686
               network_mode: service:gluetun
           networks:
             auth-net: {}
