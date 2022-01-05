@@ -359,6 +359,31 @@
                 - traefik.http.routers.sonarr-router.service=sonarr
                 - traefik.http.services.sonarr.loadbalancer.server.port=8989
               network_mode: service:gluetun
+            #
+            # Radarr: Movie collection manager for usenet and torrent users
+            # https://hotio.dev/containers/radarr/
+            #
+            radarr:
+              image: hotio/radarr:release-8b911cd-1802-linux-arm-v7
+              container_name: radarr
+              restart: unless-stopped
+              environment:
+                TZ: "{{ timezone }}"
+                PUID: 1000
+                PGID: 1000
+                UMASK: 002
+              volumes:
+                - /mnt/storage/Services/radarr:/config
+              labels:
+                - traefik.enable=true
+                - traefik.docker.network=jackett-net
+                - traefik.http.routers.radarr-router.tls=true
+                - traefik.http.routers.radarr-router.entrypoints=websecure
+                - traefik.http.routers.radarr-router.rule=Host(`radarr.{{ server_domain }}`)
+                - traefik.http.routers.radarr-router.middlewares=traefik-forward-auth@docker
+                - traefik.http.routers.radarr-router.service=radarr
+                - traefik.http.services.radarr.loadbalancer.server.port=7878
+              network_mode: service:gluetun
           networks:
             auth-net: {}
             traefik-net: {}
