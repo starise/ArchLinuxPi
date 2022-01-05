@@ -84,6 +84,7 @@
                 - auth-net
                 - adguard-net
                 - gluetun-net
+                - duplicati-net
                 - vaultwarden-net
                 - homeassistant-net
                 - vuetorrent-net
@@ -189,6 +190,33 @@
               networks:
                 - gluetun-net
             #
+            # Duplicati: Encrypted online backup software
+            # https://github.com/linuxserver/docker-duplicati
+            #
+            duplicati:
+              image: linuxserver/duplicati:latest
+              container_name: duplicati
+              restart: unless-stopped
+              environment:
+                TZ: "{{ timezone }}"
+                PUID: 1000
+                PGID: 1000
+              volumes:
+                - /mnt/storage/Services/duplicati/config:/config
+                - /mnt/storage/Services/duplicati/backups:/backups
+                - /mnt/storage/Services:/source/Services
+              labels:
+                - traefik.enable=true
+                - traefik.docker.network=duplicati-net
+                - traefik.http.routers.duplicati-router.tls=true
+                - traefik.http.routers.duplicati-router.entrypoints=websecure
+                - traefik.http.routers.duplicati-router.rule=Host(`duplicati.{{ server_domain }}`)
+                - traefik.http.routers.duplicati-router.middlewares=traefik-forward-auth@docker
+                - traefik.http.routers.duplicati-router.service=duplicati
+                - traefik.http.services.duplicati.loadbalancer.server.port=8200
+              networks:
+                - duplicati-net
+            #
             # Gerbera - UPnP Media Server
             # https://github.com/gerbera/gerbera
             #
@@ -285,6 +313,7 @@
             traefik-net: {}
             adguard-net: {}
             gluetun-net: {}
+            duplicati-net: {}
             vaultwarden-net: {}
             homeassistant-net: {}
             vuetorrent-net: {}
