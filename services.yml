@@ -334,6 +334,31 @@
                 - traefik.http.routers.jackett-router.service=jackett
                 - traefik.http.services.jackett.loadbalancer.server.port=9117
               network_mode: service:gluetun
+            #
+            # Sonarr: PVR for newsgroup and torrent users
+            # https://hotio.dev/containers/sonarr/
+            #
+            sonarr:
+              image: hotio/sonarr:release-4ee5d18-500-linux-arm-v7
+              container_name: sonarr
+              restart: unless-stopped
+              environment:
+                TZ: "{{ timezone }}"
+                PUID: 1000
+                PGID: 1000
+                UMASK: 002
+              volumes:
+                - /mnt/storage/Services/sonarr:/config
+              labels:
+                - traefik.enable=true
+                - traefik.docker.network=jackett-net
+                - traefik.http.routers.sonarr-router.tls=true
+                - traefik.http.routers.sonarr-router.entrypoints=websecure
+                - traefik.http.routers.sonarr-router.rule=Host(`sonarr.{{ server_domain }}`)
+                - traefik.http.routers.sonarr-router.middlewares=traefik-forward-auth@docker
+                - traefik.http.routers.sonarr-router.service=sonarr
+                - traefik.http.services.sonarr.loadbalancer.server.port=8989
+              network_mode: service:gluetun
           networks:
             auth-net: {}
             traefik-net: {}
