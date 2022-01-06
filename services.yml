@@ -82,6 +82,7 @@
               networks:
                 - traefik-net
                 - auth-net
+                - homer-net
                 - adguard-net
                 - gluetun-net
                 - duplicati-net
@@ -131,6 +132,29 @@
                 DOMAIN1_ZONE_ID: "{{ vault_cloudflare_domain_zone_id }}"
               volumes:
                 - /var/run/docker.sock:/var/run/docker.sock
+            #
+            # Homer: Dead simple static HOMe for servER
+            # https://github.com/bastienwirtz/homer
+            #
+            homer:
+              image: b4bz/homer:latest
+              container_name: homer
+              restart: unless-stopped
+              environment:
+                UID: 1000
+                GID: 1000
+              volumes:
+                - /mnt/storage/Services/homer/assets:/www/assets
+              labels:
+                - traefik.enable=true
+                - traefik.docker.network=homer-net
+                - traefik.http.routers.homer-router.tls=true
+                - traefik.http.routers.homer-router.entrypoints=websecure
+                - traefik.http.routers.homer-router.rule=Host(`dash.{{ server_domain }}`)
+                - traefik.http.routers.homer-router.service=homer
+                - traefik.http.services.homer.loadbalancer.server.port=8080
+              networks:
+                - homer-net
             #
             # AdGuard Home: Ad blocking and privacy protection software
             # https://github.com/AdguardTeam/AdGuardHome
@@ -411,6 +435,7 @@
               network_mode: service:gluetun
           networks:
             auth-net: {}
+            homer-net: {}
             traefik-net: {}
             adguard-net: {}
             gluetun-net: {}
