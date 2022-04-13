@@ -6,4 +6,5 @@ set -o errtrace -o nounset -o pipefail -o errexit
 mv /tmp/resizerootfs/resizerootfs.service /etc/systemd/system
 mv /tmp/resizerootfs/resizerootfs /usr/sbin/
 chmod 0644 /etc/systemd/system/resizerootfs.service
+chmod +x /usr/sbin/resizerootfs
 systemctl enable resizerootfs.service
