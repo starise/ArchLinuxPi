@@ -5,6 +5,7 @@ vendor/roles/
 
 ### Packer ###
 # Cache objects
+build/
 packer_cache/
 packer-builder-arm
 
