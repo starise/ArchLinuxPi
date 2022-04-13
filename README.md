@@ -21,7 +21,8 @@ On MacOS, Windows 10 or when you just don't want to setup Packer and all the too
 
 Pre-set packer sources available are:
 
-- [Arch Linux ARM](https://archlinuxarm.org/platforms/armv8/broadcom/raspberry-pi-4) for Raspberry Pi 4 (32-bit)
+- ArchLinux ARM armv7 (32-bit)
+- ArchLinux ARM aarch64 (64-bit)
 
 ### Customize the image
 
@@ -43,7 +44,7 @@ auth_sshkey = "~/.ssh/id_rsa.pub" # Local path to public key. Used to SSH access
 Build the image using the latest available release:
 
 ```sh
-$ packer build packer/
+$ sudo packer build -var-file="variables.pkrvars.hcl" packer/aarch64/
 ```
 
 ### Build in Docker (MacOS/Windows)
@@ -54,7 +55,7 @@ When there's no native way to use qemu-user-static (MacOS or Windows 10) the ima
 $ docker run --rm --privileged \
   -v /dev:/dev -v ${PWD}:/build \
   packer-builder-arm build \
-  -var-file="variables.pkrvars.hcl" packer/
+  -var-file="variables.pkrvars.hcl" packer/aarch64/
 ```
 
 On Windows 10, the command above should be executed into a WSL2 console.

@@ -3,12 +3,12 @@
 # https://www.packer.io/docs/from-1.5/blocks/source
 source "arm" "provisioner" {
     file_checksum_type    = "md5"
-    file_checksum_url     = "http://os.archlinuxarm.org/os/ArchLinuxARM-rpi-4-latest.tar.gz.md5"
+    file_checksum_url     = "http://os.archlinuxarm.org/os/ArchLinuxARM-rpi-armv7-latest.tar.gz.md5"
     file_target_extension = "tar.gz"
     file_unarchive_cmd    = ["bsdtar", "-xpf", "$ARCHIVE_PATH", "-C", "$MOUNTPOINT"]
-    file_urls             = ["http://os.archlinuxarm.org/os/ArchLinuxARM-rpi-4-latest.tar.gz"]
+    file_urls             = ["http://os.archlinuxarm.org/os/ArchLinuxARM-rpi-armv7-latest.tar.gz"]
     image_build_method    = "new"
-    image_path            = "${local.timestamp}-rpi4.img"
+    image_path            = "${local.timestamp}-rpi4-armv7.img"
     image_size            = "2G"
     image_type            = "dos"
     image_partitions {

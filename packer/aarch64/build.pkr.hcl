@@ -3,35 +3,6 @@
 build {
     sources = ["source.arm.provisioner"]
 
-    provisioner "shell" {
-        inline = [
-            "pacman-key --init",
-            "pacman-key --populate archlinuxarm",
-            "mv /etc/resolv.conf /etc/resolv.conf.bk",
-            "echo 'nameserver 1.1.1.1' > /etc/resolv.conf",
-            "echo 'nameserver 8.8.8.8' >> /etc/resolv.conf",
-            "pacman -Sy --noconfirm --needed",
-            "pacman -S parted --noconfirm --needed",
-            "pacman -S python --noconfirm --needed",
-            "pacman -S sudo --noconfirm --needed"
-        ]
-    }
-    # Enable container features in the kernel
-    provisioner "shell" {
-        inline = [
-            "printf %s \"$(cat /boot/cmdline.txt)\" > /boot/cmdline.txt",
-            "echo \" cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory\" >> /boot/cmdline.txt"
-        ]
-    }
-    # Upload scripts/resizerootfs to /tmp
-    provisioner "file" {
-        destination = "/tmp"
-        source      = "scripts/resizerootfs"
-    }
-    # Set up rootfs resize for first boot
-    provisioner "shell" {
-        script = "scripts/bootstrap_resizerootfs.sh"
-    }
     # Set server timezone
     provisioner "shell" {
         inline = ["ln -sf /usr/share/zoneinfo/${var.timezone} /etc/localtime"]
@@ -48,9 +19,65 @@ build {
             "locale-gen ${var.locale}"
         ]
     }
+    # Initialize pacman keyring and populate Arch Linux ARM
+    provisioner "shell" {
+        inline = [
+            "mv /etc/resolv.conf /etc/resolv.conf.bk",
+            "echo 'nameserver 1.1.1.1' > /etc/resolv.conf",
+            "echo 'nameserver 8.8.8.8' >> /etc/resolv.conf",
+            "pacman-key --init",
+            "pacman-key --populate archlinuxarm",
+            "pacman -Syy --noconfirm --needed",
+        ]
+    }
+    # Replace the generic aarch64 kernel with linux-rpi
+    provisioner "shell" {
+        inline = [
+            "pacman -S f2fs-tools parted --noconfirm --needed",
+            "pacman -Rns linux-aarch64 uboot-raspberrypi --noconfirm",
+            "pacman -S linux-rpi raspberrypi-bootloader raspberrypi-firmware --noconfirm --needed",
+        ]
+    }
+    # Apply Raspberry Pi OS kernel tweaks
+    provisioner "shell" {
+        inline = [
+            "echo 'kernel.printk = 3 4 1 3' > /etc/sysctl.d/98-rpi.conf",
+            "echo 'vm.min_free_kbytes = 16384' >> /etc/sysctl.d/98-rpi.conf"
+        ]
+    }
+    # Enable container features in the kernel
+    provisioner "shell" {
+        inline = [
+            "printf %s \"$(cat /boot/cmdline.txt)\" > /boot/cmdline.txt",
+            "echo \" cgroup_enable=memory\" >> /boot/cmdline.txt"
+        ]
+    }
+    # Install custom utility packages
+    provisioner "shell" {
+        inline = [
+            "pacman -S btrfs-progs --noconfirm --needed",
+            "pacman -S bash-completion --noconfirm --needed",
+            "pacman -S python --noconfirm --needed",
+            "pacman -S sudo --noconfirm --needed",
+            "pacman -S wget --noconfirm --needed",
+            "pacman -S git --noconfirm --needed",
+            "pacman -S zip unzip --noconfirm --needed",
+            "pacman -S htop lm_sensors --noconfirm --needed"
+        ]
+    }
+    # Upload scripts/resizerootfs to /tmp
+    provisioner "file" {
+        destination = "/tmp"
+        source      = "scripts/resizerootfs"
+    }
+    # Set up rootfs resize for first boot
+    provisioner "shell" {
+        script = "scripts/bootstrap_resizerootfs.sh"
+    }
     # Set static wired network
     provisioner "shell" {
         inline = [
+            "mv -v /etc/systemd/network/eth.network /etc/systemd/network/eth0.network.disabled",
             "echo '[Match]' > /etc/systemd/network/eth0.network",
             "echo 'Name=eth0\n' >> /etc/systemd/network/eth0.network",
             "echo '[Network]' >> /etc/systemd/network/eth0.network",
@@ -89,13 +116,6 @@ build {
     provisioner "file" {
         destination = "/home/${var.username}/.ssh/authorized_keys"
         source = "${var.auth_sshkey}"
-    }
-    # Apply Raspberry Pi OS kernel tweaks
-    provisioner "shell" {
-        inline = [
-            "echo 'kernel.printk = 3 4 1 3' > /etc/sysctl.d/98-rpi.conf",
-            "echo 'vm.min_free_kbytes = 16384' >> /etc/sysctl.d/98-rpi.conf"
-        ]
     }
     # Use nano as default text editor
     provisioner "shell" {
