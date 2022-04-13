@@ -49,7 +49,7 @@ hostname_aliases: []
 # Locale
 # https://github.com/alysoid/ansible-role-locale
 #
-keymap: it
+keymap: us
 locale: it_IT.UTF-8
 language: it_IT.UTF-8
 
