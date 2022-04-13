@@ -1,45 +1,32 @@
-# Self-Hosted
+# Arch Linux on Raspberry Pi 4
 
-> Work in progress...
-
-Self-Hosted services over HTTPS for Raspberry Pi 4 Model B Server
+Build and deploy a custom Arch Linux image for Raspberry Pi 4.
 
 ## Requirements
 
 - [Ansible](https://docs.ansible.com/ansible/2.10/installation_guide/) >= 2.10
-
-To build the Packer image locally (commonly on Gnu+Linux):
-
 - [Packer](https://www.packer.io/downloads) >= 1.7.0
 - [Packer builder ARM](https://github.com/mkaczanowski/packer-builder-arm#quick-start) plugin for Packer
 
-On MacOS, Windows 10 or when you just don't want to setup Packer and all the tools:
+```sh
+# Required packages on Arch Linux host
+$ yay -S ansible packer qemu qemu-extra qemu-arch-extra qemu-user-static-bin
+```
+
+The above packages are enough to build Packer images locally (commonly on Gnu/Linux). On MacOS, Windows 10 or when you just don't want to setup Packer and all the tools, Docker is also required:
 
 - [Docker](https://docs.docker.com/get-docker/) >= 20.10
 
-## Build a custom OS image for Raspberry Pi
+## Packer - Build custom Arch image for Raspberry Pi
 
 Pre-set packer sources available are:
 
 - ArchLinux ARM armv7 (32-bit)
 - ArchLinux ARM aarch64 (64-bit)
 
-### Customize the image
+Open and edit the `variables.pkrvars.hcl` file to customize all the desired values.
 
-Open and edit the `variables.pkrvars.hcl` file to customize all the desired values:
-
-```sh
-timezone    = "Etc/UTC"           # Default timezone for the system
-locale      = "en_US.UTF-8"       # Default locale for the system
-keymap      = "us"                # Default keyboard layout to use
-net_address = "192.168.0.1/24"    # Static IPv4 or IPv6 address + prefix length
-net_gateway = "192.168.0.254"     # Router / Gateway address
-hostname    = "alarmpi"           # Custom machine hostname
-username    = "alarm"             # Default user (`alarm` is Arch Linux ARM default)
-auth_sshkey = "~/.ssh/id_rsa.pub" # Local path to public key. Used to SSH access the RPi
-```
-
-### Build image with Packer
+### Packer - Build image locally
 
 Build the image using the latest available release:
 
@@ -47,7 +34,7 @@ Build the image using the latest available release:
 $ sudo packer build -var-file="variables.pkrvars.hcl" packer/aarch64/
 ```
 
-### Build in Docker (MacOS/Windows)
+### Packer - Build image in Docker (MacOS/Windows)
 
 When there's no native way to use qemu-user-static (MacOS or Windows 10) the image can be built using Docker:
 
@@ -60,35 +47,38 @@ $ docker run --rm --privileged \
 
 On Windows 10, the command above should be executed into a WSL2 console.
 
-## Flashing the image
+### Flashing the image on the SD Card
 
 On GNU+Linux it's a very straightforward process:
 
 ```sh
+# `/dev/sdX` is the device that represents your SD Card
 $ umount /dev/sdX*
 $ dd if=custom-rpi.img of=/dev/sdX
 ```
 
-where `/dev/sdX` is the device that represents your SD Card.
+Another simple multiplatform tool to flash the image is [Balena Etcher](https://www.balena.io/etcher/) available for Windows 10, MacOS and GNU+Linux.
 
-Another simple multiplatform tool is [Balena Etcher](https://www.balena.io/etcher/) available for Windows 10, MacOS and GNU+Linux.
+When done, put the SD Card into your Raspberry Pi 4 and **Power On** the device.
 
-![Balena Etcher](https://i.stack.imgur.com/b3VOr.gif)
+## Access to Raspberry Pi from the local network
 
-Now put the SD Card into your Raspberry Pi 4 and **Power On**.
-
-## Access from the local network
-
-When your machine is up and ready, it should be accessible via SSH using the above assigned static IP address (`net_address` variable), or using `hostname.local` where `hostname` is the custom assigned hostname.
+When your machine is up and ready, it should be accessible via SSH using the assigned static IP address (`net_address` variable), or using `hostname.local` where `hostname` is the assigned hostname.
 
 ```sh
 $ ssh -i <path/to/id_rsa> alarm@192.168.0.1
 ```
 
-## Ansible: configure and manage the Raspberry Pi
+## Ansible - Configure the system
 
-First of all, install the required collections and roles on your working machine:
+Install required collections and roles:
 
 ```sh
 $ ansible-galaxy install -r requirements.yml
+```
+
+Open and edit `group_vars/*.yml` files to customize the desired values. Once you have made the desired changes, let's configure the system via Ansible running the `system.yml` playbook:
+
+```sh
+$ ansible-playbook system.yml
 ```
