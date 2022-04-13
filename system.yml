@@ -24,14 +24,13 @@
   become: yes
   remote_user: "{{ username }}"
   roles:
-    - { role: boot-config, tags: [boot-config] }
     - { role: hostname, tags: [hostname] }
     - { role: locale, tags: [locale] }
     - { role: timezone, tags: [timezone] }
     - { role: network, tags: [network] }
-    - { role: wireless, tags: [wireless] }
     - { role: resolve, tags: [resolve] }
     - { role: timesync, tags: [timesync] }
     - { role: journald, tags: [journald] }
+    - { role: mount, tags: [mount] }
     - { role: swap, tags: [swap] }
     - { role: log2ram, tags: [log2ram] }

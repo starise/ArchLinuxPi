@@ -1,11 +1,4 @@
-collections:
-  - name: community.general
-  - name: community.docker
-
 roles:
-  - name: boot-config
-    src: https://github.com/infothrill/ansible-role-rpi_boot_config
-    version: '4.1.0'
   - name: hostname
     src: https://github.com/alysoid/ansible-role-hostname
   - name: locale
@@ -28,5 +21,3 @@ roles:
     src: https://github.com/alysoid/ansible-role-log2ram
   - name: mount
     src: https://github.com/alysoid/ansible-role-mount
-  - name: samba
-    src: https://github.com/alysoid/ansible-role-samba

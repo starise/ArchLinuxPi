@@ -1,12 +1,4 @@
 #
-# Custom /boot/config.txt lines
-# https://github.com/infothrill/ansible-role-rpi_boot_config
-#
-boot_config_lines:
-  - 'gpu_mem=128'
-  - 'disable_splash=1'
-
-#
 # System playbook
 #
 username: alarm
@@ -20,21 +12,14 @@ system_packages:
   - unzip
   - wget
   - htop
-  - iwd
-  - systemd-swap
-  - firewalld
-  - docker
-  - docker-compose
   - btrfs-progs
+  - systemd-swap
 
 #
 # System services
 #
 system_services:
-  - name: firewalld.service
-    state: started
-    enabled: yes
-  - name: docker.service
+  - name: systemd-swap.service
     state: started
     enabled: yes
 
