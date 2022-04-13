@@ -12,6 +12,7 @@ system_packages:
   - unzip
   - wget
   - htop
+  - logrotate
   - btrfs-progs
   - systemd-swap
 
@@ -20,6 +21,9 @@ system_packages:
 #
 system_services:
   - name: systemd-swap.service
+    state: started
+    enabled: yes
+  - name: logrotate.timer
     state: started
     enabled: yes
 
