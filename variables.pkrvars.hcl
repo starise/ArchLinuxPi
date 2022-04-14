@@ -13,4 +13,4 @@ hostname    = "alpi"
 # Default user (`alarm` is Arch Linux ARM default)
 username    = "alarm"
 # Local path to public key. Used to SSH access the RPi
-auth_sshkey = "build/id_rsa.pub"
+auth_sshkey = "~/.ssh/id_ed25519.pub"
