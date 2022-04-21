@@ -11,6 +11,7 @@ systemd_network:
     - Network:
       - Address: '192.168.0.1/24'
       - Gateway: '192.168.0.254'
+      - MulticastDNS: 'yes'
   wlan0:
     - Match:
       - Name: 'wlan0'
