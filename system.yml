@@ -32,5 +32,6 @@
     - { role: timesync, tags: [timesync] }
     - { role: journald, tags: [journald] }
     - { role: mount, tags: [mount] }
+    - { role: nfs, tags: [nfs] }
     - { role: swap, tags: [swap] }
     - { role: log2ram, tags: [log2ram] }

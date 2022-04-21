@@ -13,6 +13,7 @@ system_packages:
   - wget
   - htop
   - logrotate
+  - nfs-utils
   - btrfs-progs
   - systemd-swap
 
@@ -97,3 +98,12 @@ systemd_mount:
         Options: defaults
       Install:
         WantedBy: multi-user.target
+
+#
+# NFS Exports
+# https://github.com/alysoid/ansible-nfs-server
+#
+nfs_exports:
+  - name: Storage
+    path: /srv/nfs/storage
+    options: 192.168.0.0/24(rw,async,nohide)
