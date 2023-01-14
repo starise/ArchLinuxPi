@@ -1,0 +1,30 @@
+{
+  "name": "archlinux-server",
+  "version": "0.1.0",
+  "description": "Build Arch Linux with Packer & deploy, manage via Ansible.",
+  "devDependencies": {
+    "@commitlint/cli": "^17.4.2",
+    "@commitlint/config-conventional": "^17.4.2",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^8.0.0"
+  },
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/starise/archlinux-server.git"
+  },
+  "keywords": [],
+  "author": "Andrea Brandi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/starise/archlinux-server/issues"
+  },
+  "homepage": "https://github.com/starise/archlinux-server#readme"
+}
