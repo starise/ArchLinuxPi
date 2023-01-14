@@ -27,3 +27,8 @@ crash.log
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
+
+### Node ###
+# Dependencies
+node_modules/
+package-lock.json
