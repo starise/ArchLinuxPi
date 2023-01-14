@@ -7,18 +7,18 @@ network_cleanup: no
 systemd_network:
   eth0:
     - Match:
-      - Name: 'eth0'
+        - Name: 'eth0'
     - Network:
-      - Address: '192.168.0.1/24'
-      - Gateway: '192.168.0.254'
-      - MulticastDNS: 'yes'
+        - Address: '192.168.0.1/24'
+        - Gateway: '192.168.0.254'
+        - MulticastDNS: 'yes'
   wlan0:
     - Match:
-      - Name: 'wlan0'
+        - Name: 'wlan0'
     - Network:
-      - DHCP: 'yes'
+        - DHCP: 'yes'
     - DHCP:
-      - RouteMetric: '20'
+        - RouteMetric: '20'
 
 systemd_netdev: {}
 systemd_link: {}
@@ -33,14 +33,14 @@ systemd_resolved:
   dns_server:
     # Cloudflare DNS
     - Resolve:
-      - DNS: "1.1.1.1 1.0.0.1 2606:4700:4700::1111 2606:4700:4700::1001"
+        - DNS: '1.1.1.1 1.0.0.1 2606:4700:4700::1111 2606:4700:4700::1001'
   fallback_dns:
     # Google/Quad9 DNS
     - Resolve:
-      - FallbackDNS: "8.8.8.8 9.9.9.9 2001:4860:4860::8888 2620:fe::fe"
+        - FallbackDNS: '8.8.8.8 9.9.9.9 2001:4860:4860::8888 2620:fe::fe'
   dnssec:
     - Resolve:
-      - DNSSEC: "allow-downgrade"
+        - DNSSEC: 'allow-downgrade'
 
 #
 # Timesync (SNTP client)
@@ -51,10 +51,10 @@ timesync_cleanup: no
 systemd_timesyncd_conf_d:
   main_ntp:
     - Time:
-      - NTP: '0.it.pool.ntp.org 1.it.pool.ntp.org 2.it.pool.ntp.org 3.it.pool.ntp.org'
-      - RootDistanceMaxSec: '5'
-      - PollIntervalMinSec: '32'
-      - PollIntervalMaxSec: '2048'
+        - NTP: '0.it.pool.ntp.org 1.it.pool.ntp.org 2.it.pool.ntp.org 3.it.pool.ntp.org'
+        - RootDistanceMaxSec: '5'
+        - PollIntervalMinSec: '32'
+        - PollIntervalMaxSec: '2048'
   fallback_ntp:
     - Time:
-      - FallbackNTP: '0.arch.pool.ntp.org 1.arch.pool.ntp.org 2.arch.pool.ntp.org 3.arch.pool.ntp.org'
+        - FallbackNTP: '0.arch.pool.ntp.org 1.arch.pool.ntp.org 2.arch.pool.ntp.org 3.arch.pool.ntp.org'

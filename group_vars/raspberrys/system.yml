@@ -56,10 +56,10 @@ timezone: Europe/Rome
 systemd_journald:
   journald:
     - Journal:
-      - Storage: persistent
-      - SystemMaxUse: '100M'
-      - SystemMaxFilesize: '100M'
-      - SystemKeepFree: '50M'
+        - Storage: persistent
+        - SystemMaxUse: '100M'
+        - SystemMaxFilesize: '100M'
+        - SystemKeepFree: '50M'
 
 #
 # Systemd Swap (ZRam drives)
